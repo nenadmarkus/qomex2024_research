@@ -27,8 +27,18 @@ class Program
         Console.WriteLine(npc.GetTotalInteraction());
     }
 
+    static void Test3()
+    {
+        var npc = new Npc("X", "You are a weapons vendor named X.");
+        npc.AddInteraction("user", "I want to buy a gun.");
+        npc.GetResponse((string chunk) => {
+            Console.Write(chunk);
+            System.Threading.Thread.Sleep(2000);
+        });
+    }
+
     static void Main(string[] args)
     {
-        Test2();
+        Test3();
     }
 }
