@@ -99,8 +99,29 @@ class Program
         Console.WriteLine($"* average time per chunk: {(int)(tpc_sum/N)} [ms]");
     }
 
+    static void Test6()
+    {
+        string npcname = "X";
+        var npc = new Npc(npcname, "You are a weapons vendor named X, terse and mysterious. The user U needs to buy a weapon, but you will not give it to him/her until a riddle is solved. Introduce the user to the rules of the game first!");
+
+        for (int i=0; i<10; ++i)
+        {
+            Console.WriteLine("Your input: ");
+            string msg = Console.ReadLine();
+            npc.AddInteraction("U", msg);
+            Console.WriteLine("\n");
+
+            Console.WriteLine("X: ");
+            npc.GetResponse((string chunk) => {
+                Console.Write(chunk);
+                //System.Threading.Thread.Sleep(2000);
+            });
+            Console.WriteLine("\n\n");
+        }
+    }
+
     static void Main(string[] args)
     {
-        Test5();
+        Test6();
     }
 }
