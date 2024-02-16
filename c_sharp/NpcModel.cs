@@ -2,7 +2,7 @@ namespace LlamaCppCom;
 
 class Npc
 {
-    public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8080/completion")
+    public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8000/completion")
     {
         this.Engine = new LlamaCppCom(endpoint: endpoint);
         this.Prompt = initial_prompt.Trim();

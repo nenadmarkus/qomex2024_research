@@ -23,5 +23,10 @@ make -j 8
 * Run server:
 
 ```
-./llama.cpp/build/bin/server --model mistral-7b-instruct-v0.1.Q2_K.gguf --ctx-size 2048
+./llama.cpp/build/bin/server --model mistral-7b-instruct-v0.1.Q2_K.gguf --port 8000 --host 0.0.0.0 --ctx-size 2048
+```
+
+```
+docker build -t local/llama.cpp:server-cuda -f .devops/server-cuda.Dockerfile .
+docker run --gpus 1 -v .:/models -p 8000:8000 ghcr.io/ggerganov/llama.cpp:server-cuda -m /models/mistral-7b-instruct-v0.1.Q2_K.gguf --port 8000 --host 0.0.0.0 --ctx-size 2048 --n-gpu-layers 1
 ```
