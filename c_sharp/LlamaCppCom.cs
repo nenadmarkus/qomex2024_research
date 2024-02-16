@@ -6,7 +6,7 @@ namespace LlamaCppCom;
 
 class LlamaCppCom
 {
-    public LlamaCppCom(string endpoint = "http://127.0.0.1:8080/completion")
+    public LlamaCppCom(string endpoint = "http://127.0.0.1:8000/completion")
     {
         this.endpoint = endpoint;
     }
