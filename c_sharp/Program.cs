@@ -120,8 +120,68 @@ class Program
         }
     }
 
+    static void IstrazivanjeV1(string[] args)
+    {
+        if (args.Length != 2)
+        {
+            Console.WriteLine("* experiment settings: user number and experiemnt number");
+            return;
+        }
+
+        //
+        const int userCount=3, scenariosPerUser=2;
+        int[,,] experimentData = new int[userCount, scenariosPerUser, 2]
+        {
+            {
+                {0, 100},
+                {0, 2000}
+            },
+            {
+                {0, 200},
+                {0, 100}
+            },
+            {
+                {0, 300},
+                {0, 400}
+            }
+        };
+
+        int index1 = int.Parse(args[0]);
+        int index2 = int.Parse(args[1]);
+
+        int promptIndex = experimentData[index1, index2, 0];
+        int latency = experimentData[index1, index2, 1];
+
+        var scenario = File.ReadAllText($"./scenarios/{promptIndex}.txt");
+
+        var intro = scenario.Split("::::")[0].Trim();
+        var npcname = scenario.Split("::::")[1].Trim();
+        var npcprompt = scenario.Split("::::")[2].Trim();
+
+        var npc = new Npc(npcname, npcprompt);
+
+        // interaction loop
+        Console.WriteLine($"{intro}\n\n");
+
+        for (int i=0; i<10; ++i)
+        {
+            Console.WriteLine("Your input: ");
+            string msg = Console.ReadLine();
+            npc.AddInteraction("U", msg);
+            Console.WriteLine("\n");
+
+            Console.WriteLine($"{npcname}: ");
+            npc.GetResponse((string chunk) => {
+                Console.Write(chunk);
+                System.Threading.Thread.Sleep(latency);
+            });
+            Console.WriteLine("\n\n");
+        }
+    }
+
     static void Main(string[] args)
     {
-        Test6();
+        //Test6();
+        IstrazivanjeV1(args);
     }
 }
