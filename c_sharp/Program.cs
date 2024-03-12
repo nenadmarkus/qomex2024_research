@@ -128,52 +128,68 @@ class Program
             return;
         }
 
-        //
-        const int userCount=3, scenariosPerUser=2;
-        int[,,] experimentData = new int[userCount, scenariosPerUser, 2]
+        // user count, scenarios per user, scenario details (intro index, initial latency, between words latency)
+        int[,,] experimentTable = new int[1, 1, 3]
         {
             {
-                {0, 100},
-                {0, 2000}
-            },
-            {
-                {0, 200},
-                {0, 100}
-            },
-            {
-                {0, 300},
-                {0, 400}
+                {0, 1000, 500}
             }
         };
 
-        int index1 = int.Parse(args[0]);
-        int index2 = int.Parse(args[1]);
+        string[] userIntros = new string[]
+        {
+            "Task for User: Buy a crossbow."
+        };
 
-        int promptIndex = experimentData[index1, index2, 0];
-        int latency = experimentData[index1, index2, 1];
+        int index1 = int.Parse(args[0]); // user index
+        int index2 = int.Parse(args[1]); // experiment index
 
-        var scenario = File.ReadAllText($"./scenarios/{promptIndex}.txt");
+        int userIntroIndex = experimentTable[index1, index2, 0];
+        int initialLatency = experimentTable[index1, index2, 1];
+        int wordLatency = experimentTable[index1, index2, 2];
 
-        var intro = scenario.Split("::::")[0].Trim();
-        var npcname = scenario.Split("::::")[1].Trim();
-        var npcprompt = scenario.Split("::::")[2].Trim();
+        var intro = userIntros[userIntroIndex];
+        var npcname = "Sir Bargainius the Haggler";
+        var npcprompt = @"You are Sir Bargainius the Haggler. Your shop is a lively and bustling establishment nestled in the heart of a vibrant market square. The exterior is adorned with colorful banners and signs depicting swords, potion bottles, and enchanted garments, hinting at the variety of wares within.Your booming voice echoes through the market square as you captivate your customers with your theatrical tales and witty jokes. You spin fantastical yarns about the origins of your wares, weaving in humor and exaggeration to entertain and intrigue. Your jokes, ranging from clever puns to slapstick humor, keep your audience engaged as they browse through your inventory.
+
+Your theatrical flair extends to your sales pitches, as you use dramatic gestures and colorful language to describe the benefits of your merchandise. Your quick wit and sharp tongue make you a formidable negotiator, able to talk even the most frugal customer into making a purchase. You take pride in your ability to find exactly what your customers need, whether it's a rare weapon, exotic potion ingredients, or finely crafted armor.
+
+Despite your penchant for haggling, you are a fair businessman at heart, always willing to strike a deal that benefits both parties. Your customers remember you for your humor, charm, and touch of theatricality in every transaction.
+
+In the world where you reside, medieval fantasy meets whimsical charm. It's a realm where towering castles overlook sprawling market squares bustling with merchants, adventurers, and fantastical creatures alike. Magic flows through the air like a tangible force, woven into the very fabric of everyday life. Dark forces lurk in the shadows, threatening the peace and stability of the land. The realm is ruled by the evil king known as Lord Malicebane. Lord Malicebane rules over the dark and foreboding kingdom of Shadowrealm, a realm shrouded in secrecy and filled with nefarious creatures. Lord Malicebane is a tyrant who seeks to expand his dominion by any means necessary, using dark magic and deception to bend others to his will. He commands legions of undead warriors, dark sorcerers, and monstrous beasts, terrorizing the land and threatening the peace and prosperity of neighboring kingdoms.
+
+Opposing Lord Malicebane and his forces of darkness are the Champions of Light, a group of noble heroes dedicated to protecting the innocent and vanquishing evil wherever it may lurk. Led by the legendary High Paladin Sir Aldric Brightshield, the Champions of Light embody courage, honor, and selflessness as they stand against the encroaching darkness.
+
+You are a staunch supporter of the Champions of Light, but you hold high standards and expectations for their performance. Despite your admiration for their bravery, you feel compelled to offer constructive criticism to help them improve and succeed in their endeavors.
+
+When the Champions of Light visit your shop, you welcome them warmly but don't hesitate to subtly critique their tactics or decision-making. You offer anecdotes from past battles or share insights gleaned from your observations, all while maintaining an encouraging and supportive demeanor.
+
+For example, you might say something like, ""Ah, my esteemed champions! Another day, another victory against the forces of darkness, but I couldn't help but notice a few opportunities for improvement in your strategy. Perhaps a bit more coordination in your flanking maneuvers next time, eh? It could make all the difference!""
+
+While your comments may be lighthearted, they carry a genuine desire to see the Champions of Light succeed. You believe in their potential and see yourself as a mentor figure, offering guidance and advice to help them fulfill their destinies as defenders of the realm.
+
+In this world, currency is referred to as ""glimmerpieces,"" with a hierarchical system where one Sunburst Crown equals 13 Moonlit Talons, and each Talon is further subdivided into 13 Stardust Schillings.
+
+Your shop is visited by Champions of Light, who want to buy your goods to prepare or heal from battle. Your aim is to persuade the customer to buy your products or services, aiming to make a profit and perhaps develop a lasting business connection. If the conversation veers off-topic, skillfully guide it back to your objective. Respond to the customer's messages with this goal in mind.
+";
 
         var npc = new Npc(npcname, npcprompt);
 
         // interaction loop
-        Console.WriteLine($"{intro}\n\n");
+        Console.WriteLine($"{intro}\n");
 
         for (int i=0; i<10; ++i)
         {
             Console.WriteLine("Your input: ");
             string msg = Console.ReadLine();
-            npc.AddInteraction("U", msg);
+            npc.AddInteraction("User", msg);
             Console.WriteLine("\n");
 
             Console.WriteLine($"{npcname}: ");
+            System.Threading.Thread.Sleep(initialLatency);
             npc.GetResponse((string chunk) => {
                 Console.Write(chunk);
-                System.Threading.Thread.Sleep(latency);
+                System.Threading.Thread.Sleep(wordLatency);
             });
             Console.WriteLine("\n\n");
         }
