@@ -120,6 +120,12 @@ class Program
         }
     }
 
+    static int RandInt(int a, int b)
+    {
+        Random rand = new Random();
+        return rand.Next(a, b + 1);
+    }
+
     static void IstrazivanjeV1(string[] args)
     {
         if (args.Length != 2)
@@ -149,7 +155,7 @@ Mana: DD/50
 
 Buy weapons, garments and potion ingredients too boost your attributes.
 
-You have XX Sunburst Crowns and YY Moonlit Talons at you disposal."
+You have XX Sunburst Crowns, YY Moonlit Talons and ZZ Stardust Schillings at you disposal."
         };
 
         int index1 = int.Parse(args[0]); // user index
@@ -158,7 +164,8 @@ You have XX Sunburst Crowns and YY Moonlit Talons at you disposal."
         int initialLatency = experimentTable[index1, index2, 0];
         int wordLatency = experimentTable[index1, index2, 1];
 
-        var intro = userIntros[0];
+        var intro = userIntros[0].Replace("AA", RandInt(25, 35).ToString()).Replace("BB", RandInt(25, 35).ToString()).Replace("CC", RandInt(25, 35).ToString()).Replace("DD", RandInt(25, 35).ToString());
+        intro = intro.Replace("XX", RandInt(2, 4).ToString()).Replace("YY", RandInt(2, 7).ToString()).Replace("ZZ", RandInt(5, 10).ToString());
         var npcname = "Sir Bargainius the Haggler";
         var npcprompt = @"You are Sir Bargainius the Haggler. Your shop is a lively and bustling establishment nestled in the heart of a vibrant market square. Your booming voice echoes through the market square as you captivate your customers with your theatrical tales and witty jokes. You spin fantastical yarns about the origins of your wares, weaving in humor and exaggeration to entertain and intrigue. Your jokes are filled with clever puns.
 
@@ -242,10 +249,12 @@ Werewolf Fang - H 7 (7 MT)";
 
         for (int i=0; i<10; ++i)
         {
-            Console.WriteLine("Your input: ");
             string msg = "Hello!";
             if (i > 0)
+            {
+                Console.WriteLine("Your input: ");
                 msg = Console.ReadLine();
+            }
             npc.AddInteraction("User", msg);
             Console.WriteLine("\n");
 
