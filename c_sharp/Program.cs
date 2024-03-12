@@ -243,7 +243,9 @@ Werewolf Fang - H 7 (7 MT)";
         for (int i=0; i<10; ++i)
         {
             Console.WriteLine("Your input: ");
-            string msg = Console.ReadLine();
+            string msg = "Hello!";
+            if (i > 0)
+                msg = Console.ReadLine();
             npc.AddInteraction("User", msg);
             Console.WriteLine("\n");
 
