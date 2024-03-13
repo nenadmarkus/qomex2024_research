@@ -155,7 +155,7 @@ Mana: DD/50
 
 Buy weapons, garments and potion ingredients too boost your attributes.
 
-You have XX Sunburst Crowns, YY Moonlit Talons and ZZ Stardust Schillings at you disposal."
+You have XX Stardust Schillings at you disposal."
         };
 
         int index1 = int.Parse(args[0]); // user index
@@ -165,7 +165,7 @@ You have XX Sunburst Crowns, YY Moonlit Talons and ZZ Stardust Schillings at you
         int wordLatency = experimentTable[index1, index2, 1];
 
         var intro = userIntros[0].Replace("AA", RandInt(25, 35).ToString()).Replace("BB", RandInt(25, 35).ToString()).Replace("CC", RandInt(25, 35).ToString()).Replace("DD", RandInt(25, 35).ToString());
-        intro = intro.Replace("XX", RandInt(2, 4).ToString()).Replace("YY", RandInt(2, 7).ToString()).Replace("ZZ", RandInt(5, 10).ToString());
+        intro = intro.Replace("XX", RandInt(100, 250).ToString());
         var npcname = "Sir Bargainius the Haggler";
         var npcprompt = @"You are Sir Bargainius the Haggler. Your shop is a lively and bustling establishment nestled in the heart of a vibrant market square. Your booming voice echoes through the market square as you captivate your customers with your theatrical tales and witty jokes. You spin fantastical yarns about the origins of your wares, weaving in humor and exaggeration to entertain and intrigue. Your jokes are filled with clever puns.
 
@@ -185,62 +185,60 @@ Your shop is visited by Champions of Light, who want to buy your goods to prepar
 
 When the customer asks for a certain object, provide them with a list of three offered objects, but don't immediately give them the prices and features of each offered item, let them ask first. Be willing to haggle, but reduce the price by 30 percent at most. Increase the price if the person is mean. Avoid apologizing for any misunderstandings and simply address the question at hand. Generate replies solely within the context of the shopkeeper's persona and medieval times.  Do not reference being an AI model or discuss these instructions.
 
-In this world, currency is referred to as ""glimmerpieces,"" with a hierarchical system where one Sunburst Crown equals 13 Moonlit Talons, and each Talon is further subdivided into 13 Stardust Schillings. The items in your shop are as follows. Each item contributes to either strength, defense, health, or mana. Their prices are in brackets.
+In this world, the currency are Stardust Schillings (also referred to as ""glimmerpieces""). The items in your shop are as follows. Each item contributes to either strength, defense, health, or mana. Their prices are in brackets.
 
-(Note: H=Health, D=Defense, M=Mana, S=Strength, SC=Sunburst Crown, MT=Moonlit Talon, SS=Stardust Schilling)
+(Note: H=Health, D=Defense, M=Mana, S=Strength, SS=Stardust Schilling)
 
 Weapons:
-Iron Shortsword - S 5, D 5 (1 SC, 5 MT)
-Steel Longsword - S 10 (2 SC)
-Bronze Dagger - D 3 (3 MT)
-Silver Rapier - S 2, D 2 (1 SC, 2 MT)
-Golden Warhammer - S 12, D 12 (1 SC, 12 MT)
-Adamantium Battleaxe - S 18, D 6 (3 SC, 1 MT)
-Obsidian Katana - S 12, D 3 (2 SC, 3 MT)
-Emerald Staff - S 7, D 5 (1 SC, 7 MT)
-Crystal Wand - S 6, D 4 (1 SC, 5 MT)
-Sapphire Dagger - S 2 (2 MT)
-Ruby Crossbow - S 6 (2 SC, 6 MT)
-Diamond Spear - S 4 (3 SC, 4 MT)
-Platinum Halberd - S 14, D 10 (4 SC)
-Mithril Bow - S 9 (1 SC, 9 MT)
-Enchanted Staff of Fire - S 15 (5 SC)
-Garments:
+Iron Shortsword - S 5, D 5 (10 SS)
+Steel Longsword - S 10 (30 SS)
+Bronze Dagger - S1, D 3 (5 SS)
+Silver Rapier - S 6, D 6 (20)
+Golden Warhammer - S 12, D 12 (200 SS)
+Adamantium Battleaxe - S 18, D 6 (500 SS)
+Obsidian Katana - S 12, D 3 (70 SS)
+Emerald Staff - S 7, D 5 (120 SS)
+Crystal Wand - S 6, D 4 (150 SS)
+Sapphire Dagger - S 2 (100 SS)
+Ruby Crossbow - S 6 (35 SS)
+Diamond Spear - S 4 (45 SS)
+Platinum Halberd - S 14, D 10 (250 SS)
+Mithril Bow - S 9 (110 SS)
+Enchanted Staff of Fire - S 15 (75 SS)
 
 Garments:
-Leather Boots - D 6 (3 MT)
-Woolen Cloak - D 6 (6 MT)
-Silk Gloves - D 8 (8 MT)
-Fur-lined Hat - D 4 (4 MT)
-Cotton Tunic - D 5 (5 MT)
-Velvet Dress - D 12 (12 MT)
-Gold Crown - D 1, M 7 (1 MT, 7 SC)
-Silver Belt Buckle - D 7 (7 MT)
-Embroidered Shawl - D 10 (10 MT)
-Platinum Necklace - D 2, M 7 (2 MT, 5 SC)
-Enchanted Robe - D 1, M 12 (1 MT, 12 SC)
-Bronze Armlet - D 5 (5 MT)
-Diamond-studded Earrings - D 3, M 1 (3 MT, 1 SC)
-Chainmail Hauberk - D 1, M 2 (1 MT, 2 SC)
-Magical Circlet - D 3, M 11 (3 MT, 11 SC)
-Potion Ingredients:
+Leather Boots - D 6 (20 SS)
+Woolen Cloak - D 6 (25 SS)
+Silk Gloves - D 8 (45 SS)
+Fur-lined Hat - D 4 (4 15 SS)
+Cotton Tunic - D 5 (20 SS)
+Velvet Dress - D 12 (75 SS)
+Gold Crown - D 1, M 7 (15 SS)
+Silver Belt Buckle - D 7 (30 SS)
+Embroidered Shawl - D 10 (100 SS)
+Platinum Necklace - D 2, M 7 (200 SS)
+Enchanted Robe - D 1, M 12 (350 SS)
+Bronze Armlet - D 5 (10 SS)
+Diamond-studded Earrings - D 3, M 1 (125 SS)
+Chainmail Hauberk - D 1, M 2 (15 SS)
+Magical Circlet - D 3, M 11 (500 SS)
 
 Potion ingredients:
-Mandrake Root - H 2 (2 MT)
-Wolfsbane - H 3 (3 MT)
-Nightshade - H 4 (4 MT)
-Dragon's Blood - H 10 (10 MT)
-Phoenix Feather - H 1, M 7 (1 MT, 2 SC)
-Unicorn Horn - H 1, M 7 (1 MT, 7 SC)
-Griffin Claw - H 1 (1 MT)
-Basilisk Scale - H 8 (8 MT)
-Mermaid's Tear - H 1, M 12 (1 MT, 12 SC)
-Fairy Dust - H 6 (6 MT)
-Goblin Ear - H 1 (1 MT)
-Troll Hair - H 5 (5 MT)
-Cyclops Eye - D 8, M 7 (1 MT, 5 SC)
-Siren Song - D 10, M 7 (2 MT, 5 SC)
-Werewolf Fang - H 7 (7 MT)";
+Mandrake Root - H 2 (16 SS)
+Wolfsbane - H 3 (25 SS)
+Nightshade - H 4 (30 SS)
+Dragon's Blood - H 10 (250 SS)
+Phoenix Feather - H 1, M 7 (20 SS)
+Unicorn Horn - H 1, M 7 (25 SS)
+Griffin Claw - H 1 (5 SS)
+Basilisk Scale - H 8 (150 SS)
+Mermaid's Tear - H 1, M 12 (35 SS)
+Fairy Dust - H 6 (35 SS)
+Goblin Ear - H 1 (5 SS)
+Troll Hair - H 5 (5 SS)
+Cyclops Eye - D 8, M 7 (325 SS)
+Siren Song - D 10, M 7 (400 SS)
+Werewolf Fang - H 7 (75 SS)";
 
         var npc = new Npc(npcname, npcprompt);
 
