@@ -253,6 +253,13 @@ Werewolf Fang - H 7 (75 SS)";
                 Console.WriteLine("Your input: ");
                 msg = Console.ReadLine();
             }
+            if (msg.ToLower().Trim().Equals("goodbye!"))
+            {
+                Console.WriteLine("\n");
+                Console.WriteLine($"{npcname}: ");
+                Console.WriteLine("Thank you for visiting my shop. Goodbye!");
+                break;
+            }
             npc.AddInteraction("User", msg);
             Console.WriteLine("\n");
 
