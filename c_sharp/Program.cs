@@ -138,8 +138,11 @@ class Program
         int[,,] experimentTable = new int[1, 1, 2]
         {
             {
-                // initialLatency, wordLatency
-                {10, 10}
+                // initialLatency, wordLatency (both in miliseconds)
+                {0, 0},
+                {1000, 0},
+                {3000, 0},
+                {5000, 0},
             }
         };
 
