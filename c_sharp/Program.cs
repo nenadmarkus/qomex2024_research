@@ -135,7 +135,7 @@ class Program
         }
 
         // user count, scenarios per user, scenario details (initial latency, between words latency)
-        int[,,] experimentTable = new int[1, 1, 2]
+        int[,,] experimentTable = new int[2, 4, 2]
         {
             // first user:
             {
