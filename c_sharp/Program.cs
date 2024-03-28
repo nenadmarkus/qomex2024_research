@@ -70,7 +70,7 @@ class Program
         if (nchunks == 0)
             return Test4();
 
-        t0 = 1000*t0;
+        t0 = 1000 * t0;
         double tpc = 1000 * sw.Elapsed.TotalSeconds / nchunks;
 
         Console.WriteLine("\n");
@@ -87,7 +87,7 @@ class Program
 
         Test4(); // warm up run
 
-        for (int i=0; i<N; ++i)
+        for (int i = 0; i < N; ++i)
         {
             var (t0, tpc) = Test4();
             t0_sum += t0;
@@ -95,8 +95,8 @@ class Program
         }
 
         Console.WriteLine("\n");
-        Console.WriteLine($"* average time to first chunk: {(int)(t0_sum/N)} [ms]");
-        Console.WriteLine($"* average time per chunk: {(int)(tpc_sum/N)} [ms]");
+        Console.WriteLine($"* average time to first chunk: {(int)(t0_sum / N)} [ms]");
+        Console.WriteLine($"* average time per chunk: {(int)(tpc_sum / N)} [ms]");
     }
 
     static void Test6()
@@ -104,7 +104,7 @@ class Program
         string npcname = "X";
         var npc = new Npc(npcname, "You are a weapons vendor named X, terse and mysterious. The user U needs to buy a weapon, but you will not give it to him/her until a riddle is solved. Introduce the user to the rules of the game first!");
 
-        for (int i=0; i<10; ++i)
+        for (int i = 0; i < 10; ++i)
         {
             Console.WriteLine("Your input: ");
             string msg = Console.ReadLine();
@@ -130,27 +130,50 @@ class Program
     {
         if (args.Length != 2)
         {
-            Console.WriteLine("* experiment settings: user number and experiemnt number");
+            Console.WriteLine("* experiment settings: user number and experiment number");
             return;
         }
 
         // user count, scenarios per user, scenario details (initial latency, between words latency)
-        int[,,] experimentTable = new int[, , ]
+        int[,,] experimentTable = new int[,,]
         {
-            // first user:
+            // user0:
             {
-                // initialLatency, wordLatency (both in miliseconds)
-                {0, 0},
-                {1000, 0},
-                {3000, 0},
-                {5000, 0},
+                // initialLatency, wordLatency (both in miliseconds), garment identifier (0 = weapons, 1 = potion ingredients, 2 = garments, 3 = any)
+                {0, 0, 3}, //here, the user tries out the chatbot
+                {0, 200, 2}, //scenario 1
+                {0, 100, 1},
+                {0, 50, 2},
+                {0, 0, 0},
+                {1000, 0, 0}, //scenario 2
+                {0, 0, 2},
+                {5000, 0, 1},
+                {3000, 0, 2},
+
             },
-            // second user:
+            // user1:
             {
-                {1000, 0},
-                {3000, 0},
-                {0, 0},
-                {5000, 0},
+                {0, 0, 3},
+                {0, 200, 2},
+                {0, 100, 1},
+                {0, 0, 2},
+                {0, 50, 0},
+                {0, 0, 2},
+                {5000, 0, 2},
+                {1000, 0, 2},
+                {3000, 0, 0},
+            }
+            // user2:
+            {
+                {0, 0, 3},
+                {0, 0, 2},
+                {5000, 0, 0},
+                {3000, 0, 1},
+                {1000, 0, 1},
+                {0, 100, 2},
+                {5000, 50, 2},
+                {1000, 0, 1},
+                {3000, 200, 1},
             }
         };
 
@@ -166,17 +189,22 @@ Mana: DD/50
 
 Buy weapons, garments and potion ingredients too boost your attributes.
 
-You have XX Stardust Schillings at you disposal."
+You have XX Stardust Schillings at you disposal.
+
+You need to buy YY. Talk to Sir Bargainius and see what he has to offer."
         };
 
         int index1 = int.Parse(args[0]); // user index
         int index2 = int.Parse(args[1]); // experiment index
+        string[] items = ["one or more weapons of your choice", "one or more potion ingredients of your choice", "one or more garments of your choice", "something from Sir Bargainius: it can be a weapon, a potion ingredient, or a garment"];
+
 
         int initialLatency = experimentTable[index1, index2, 0];
         int wordLatency = experimentTable[index1, index2, 1];
 
         var intro = userIntros[0].Replace("AA", RandInt(25, 35).ToString()).Replace("BB", RandInt(25, 35).ToString()).Replace("CC", RandInt(25, 35).ToString()).Replace("DD", RandInt(25, 35).ToString());
         intro = intro.Replace("XX", RandInt(100, 250).ToString());
+        intro = intro.Replace("YY", items[experimentTable[index1, index2, 2]]);
         var npcname = "Sir Bargainius the Haggler";
         var npcprompt = @"You are Sir Bargainius the Haggler. Your shop is a lively and bustling establishment nestled in the heart of a vibrant market square. Your booming voice echoes through the market square as you captivate your customers with your theatrical tales and witty jokes. You spin fantastical yarns about the origins of your wares, weaving in humor and exaggeration to entertain and intrigue. Your jokes are filled with clever puns.
 
@@ -196,13 +224,13 @@ When the customer asks for a certain object, provide them with a list of three o
 
 In this world, the currency are Stardust Schillings (also referred to as ""glimmerpieces""). The items in your shop are as follows. Each item contributes to either strength, defense, health, or mana. Their prices are in brackets.
 
-(Note: H=Health, D=Defense, M=Mana, S=Strength, SS=Stardust Schilling)
+(Note: H=Health, D=Defense, M=Mana, S=Strength, SS=Stardust Schillings)
 
 Weapons:
 Iron Shortsword - S 5, D 5 (10 SS)
 Steel Longsword - S 10 (30 SS)
-Bronze Dagger - S1, D 3 (5 SS)
-Silver Rapier - S 6, D 6 (20)
+Bronze Dagger - S 1, D 3 (5 SS)
+Silver Rapier - S 6, D 6 (20 SS)
 Golden Warhammer - S 12, D 12 (200 SS)
 Adamantium Battleaxe - S 18, D 6 (500 SS)
 Obsidian Katana - S 12, D 3 (70 SS)
@@ -219,7 +247,7 @@ Garments:
 Leather Boots - D 6 (20 SS)
 Woolen Cloak - D 6 (25 SS)
 Silk Gloves - D 8 (45 SS)
-Fur-lined Hat - D 4 (4 15 SS)
+Fur-lined Hat - D 4 (15 SS)
 Cotton Tunic - D 5 (20 SS)
 Velvet Dress - D 12 (75 SS)
 Gold Crown - D 1, M 7 (15 SS)
@@ -254,7 +282,7 @@ Werewolf Fang - H 7 (75 SS)";
         // interaction loop
         Console.WriteLine($"{intro}\n");
 
-        for (int i=0; i<10; ++i)
+        for (int i = 0; i < 50; ++i)
         {
             string msg = "Hello!";
             if (i > 0)
@@ -262,7 +290,7 @@ Werewolf Fang - H 7 (75 SS)";
                 Console.WriteLine("Your input: ");
                 msg = Console.ReadLine();
             }
-            if (msg.ToLower().Trim().Equals("goodbye!"))
+            if (msg.ToLower().Trim().Contains("goodbye"))
             {
                 Console.WriteLine("\n");
                 Console.WriteLine($"{npcname}: ");
