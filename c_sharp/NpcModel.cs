@@ -23,23 +23,23 @@ class Npc
             onResponseChunk(chunk);
         };
 
-        string interaction = this.Prompt;
+        string interaction = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" + this.Prompt + "<|eot_id|>";
         foreach (var t in this.Interaction)
         {
-            interaction += "\n\n::::" + t.Item1 + ":\n" + t.Item2.Trim();
+            interaction += "<|start_header_id|>" + t.Item1 + "<|end_header_id|>\n\n" + t.Item2.Trim() + "<|eot_id|>";
         }
 
-        interaction += "\n\n::::" + this.Name + ":\n";
+        interaction += "<|start_header_id|>assistant<|end_header_id|>";
 
         this.Engine.Communicate(
             interaction,
             2048,
-            new string[] { "\n::::" }
+            new string[] { "<|eot_id|>" }
         );
 
         response = response.Trim();
 
-        this.Interaction.Add( (this.Name, response) );
+        this.Interaction.Add( ("assistant", response) );
 
         this.TotalInteraction = interaction + response;
     }

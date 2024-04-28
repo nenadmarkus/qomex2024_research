@@ -612,7 +612,7 @@ Werewolf Fang - H 7 (75 SS)";
 
         for (int i = 0; i < 50; ++i)
         {
-            string msg = "Hello!";
+            string msg = "*enters shop for the first time*\n\nHello!";
             if (i > 0)
             {
                 Console.WriteLine("Your input: ");
@@ -625,7 +625,7 @@ Werewolf Fang - H 7 (75 SS)";
                 Console.WriteLine("Thank you for visiting my shop. Goodbye!");
                 break;
             }
-            npc.AddInteraction("User", msg);
+            npc.AddInteraction("user", msg);
             Console.WriteLine("\n");
 
             Console.WriteLine($"{npcname}: ");
