@@ -26,15 +26,15 @@ class Npc
         string interaction = this.Prompt;
         foreach (var t in this.Interaction)
         {
-            interaction += "\n\n::::" + t.Item1 + ":\n" + t.Item2.Trim();
+            interaction += "\n\n>> " + t.Item1 + ":\n" + t.Item2.Trim();
         }
 
-        interaction += "\n\n::::" + this.Name + ":\n";
+        interaction += "\n\n>> " + this.Name + ":\n";
 
         this.Engine.Communicate(
             interaction,
             2048,
-            new string[] { "\n::::" }
+            new string[] { ">>" }
         );
 
         response = response.Trim();
