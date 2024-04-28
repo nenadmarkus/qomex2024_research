@@ -23,18 +23,20 @@ class Npc
             onResponseChunk(chunk);
         };
 
-        string interaction = this.Prompt;
+        string interaction = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>You are a helpful assistant that needs to complete the mystical interaction below (just one turn!)<|eot_id|>";
+        interaction += "<|start_header_id|>user<|end_header_id|>" + this.Prompt.Trim();
         foreach (var t in this.Interaction)
         {
-            interaction += "\n\n::::" + t.Item1 + ":\n" + t.Item2.Trim();
+            interaction += "\n\n" + t.Item1 + ":\n" + t.Item2.Trim();
         }
 
-        interaction += "\n\n::::" + this.Name + ":\n";
+        interaction += "\n\n" + this.Name + ":\n";
+        interaction += "<|eot_id|><|start_header_id|>assistant<|end_header_id|>";
 
         this.Engine.Communicate(
             interaction,
             2048,
-            new string[] { "\n::::" }
+            new string[] { "<|eot_id|>" }
         );
 
         response = response.Trim();
