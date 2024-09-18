@@ -2,16 +2,21 @@ namespace LlamaCppCom;
 
 class Npc
 {
-    public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8000/completion")
+    public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
     {
         this.Engine = new LlamaCppCom(endpoint: endpoint);
-        this.Prompt = initial_prompt.Trim();
-        this.Name = name;
+        this.Messages.Add(new Dictionary<string, string> {
+            {"role", "system"},
+            {"content", initial_prompt.Trim()}
+        });
     }
 
     public void AddInteraction(string whowhat, string input)
     {
-        this.Interaction.Add( (whowhat, input) );
+        this.Messages.Add(new Dictionary<string, string> {
+            {"role", "user"},
+            {"content", input.Trim()}
+        });
     }
 
     public void GetResponse(Action<string> onResponseChunk)
@@ -23,33 +28,21 @@ class Npc
             onResponseChunk(chunk);
         };
 
-        string interaction = this.Prompt;
-        foreach (var t in this.Interaction)
-        {
-            interaction += "\n\n::::" + t.Item1 + ":\n" + t.Item2.Trim();
-        }
-
-        interaction += "\n\n::::" + this.Name + ":\n";
-
-        this.Engine.Communicate(
-            interaction,
-            2048,
-            new string[] { "\n::::" }
-        );
+        this.Engine.Communicate(this.Messages);
 
         response = response.Trim();
 
-        this.Interaction.Add( (this.Name, response) );
-
-        this.TotalInteraction = interaction + response;
+        this.Messages.Add(new Dictionary<string, string> {
+            {"role", "assistant"},
+            {"content", response.Trim()}
+        });
     }
 
     public string GetTotalInteraction()
     {
-        return this.TotalInteraction;
+        return "... NOT IMPLEMENTED ...";
     }
 
-    private string Prompt, Name, TotalInteraction;
-    private readonly List<(string, string)> Interaction = new();
-    private readonly LlamaCppCom Engine = null;
+    private readonly List<Dictionary<string, string>> Messages = new();
+    private readonly LlamaCppCom Engine;
 }

@@ -2,7 +2,7 @@
 
 class Program
 {
-    static void Test1()
+    /*static void Test1()
     {
         var com = new LlamaCppCom();
         com.OnResponseChunk = (string chunk) => {
@@ -12,7 +12,7 @@ class Program
             "Building a website can be done in 10 simple steps:",
             384, new string[] { "7." } // generating should stop when these strings are encountered
         );
-    }
+    }*/
 
     static void Test2()
     {
@@ -60,10 +60,7 @@ class Program
         };
 
         sw.Start();
-        com.Communicate(
-            "Building a website can be done in 10 simple steps:",
-            512, null
-        );
+        ///com.Communicate(new (role: "system", content: "Building a website can be done in 10 simple steps:"));
 
         // we had an error in server returning 0 chunks!
         // fix with this hack
@@ -642,5 +639,6 @@ Werewolf Fang - H 7 (75 SS)";
     {
         //Test6();
         IstrazivanjeV1(args);
+        //IstrazivanjeV1(new string [] {"0", "0"});
     }
 }

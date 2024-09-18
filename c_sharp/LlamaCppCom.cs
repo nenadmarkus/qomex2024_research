@@ -6,21 +6,19 @@ namespace LlamaCppCom;
 
 class LlamaCppCom
 {
-    public LlamaCppCom(string endpoint = "http://127.0.0.1:8000/completion")
+    public LlamaCppCom(string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
     {
         this.endpoint = endpoint;
     }
 
     public Action<string>? OnResponseChunk;
 
-    public void Communicate(string prompt, int n_predict, string[] stop_seqs)
+    public void Communicate(List<Dictionary<string, string>> messages)
     {
         // prepare JSON payload
         var payload = new
         {
-            prompt = prompt,
-            n_predict = n_predict,
-            stop = stop_seqs,
+            messages = messages,
             stream = true
         };
 
@@ -54,12 +52,40 @@ class LlamaCppCom
 
             if (!string.IsNullOrWhiteSpace(line) && line.StartsWith("data: "))
             {
-                var data = JsonSerializer.Deserialize<dynamic>(line.Substring(6));
-                if (data is not null && data.GetProperty("stop").GetBoolean() is false)
+                var dataStr = line.Substring(6).Trim(); // Remove "data: " prefix
+
+                if (dataStr == "[DONE]")
                 {
-                    this.OnResponseChunk?.Invoke(
-                        data.GetProperty("content").GetString()
-                    );
+                    break;
+                }
+
+                try
+                {
+                    using JsonDocument jsonDoc = JsonDocument.Parse(dataStr);
+                    JsonElement root = jsonDoc.RootElement;
+
+                    if (root.TryGetProperty("choices", out JsonElement choicesElement))
+                    {
+                        foreach (JsonElement choice in choicesElement.EnumerateArray())
+                        {
+                            if (choice.TryGetProperty("delta", out JsonElement deltaElement))
+                            {
+                                if (deltaElement.TryGetProperty("content", out JsonElement contentElement))
+                                {
+                                    string content = contentElement.GetString() ?? "";
+
+                                    // Invoke the response chunk action
+                                    OnResponseChunk?.Invoke(content);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    // Handle JSON parsing errors
+                    Console.WriteLine($"JSON parse error: {ex.Message}");
+                    continue;
                 }
             }
         }
