@@ -1,3 +1,6 @@
+import json
+import requests
+
 def openai_api_response():
     import openai
     client = openai.OpenAI(
@@ -48,8 +51,6 @@ def stream_response():
                 data = json.loads(line.split("data: ")[1])
                 if not data["stop"]:
                     print(data["content"])
-
-import requests
 
 INIT_PROMPT = '''You are Sir Bargainius the Haggler. Your shop is a lively and bustling establishment nestled in the heart of a vibrant market square. Your booming voice echoes through the market square as you captivate your customers with your theatrical tales and witty jokes. You spin fantastical yarns about the origins of your wares, weaving in humor and exaggeration to entertain and intrigue. Your jokes are filled with clever puns.
 
@@ -154,5 +155,55 @@ def chat():
         # Add the assistant's reply to the conversation history
         messages.append({"role": "assistant", "content": assistant_message})
 
+def chat_streaming():
+    endpoint = "http://localhost:8000/v1/chat/completions"
+    headers = {"Content-Type": "application/json"}
+
+    messages = [{"role": "system", "content": INIT_PROMPT}]
+
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit"]:
+            print("Goodbye!")
+            break
+
+        messages.append({"role": "user", "content": user_input})
+
+        data = {
+            "messages": messages,
+            "stream": True,  # Enable streaming
+        }
+
+        try:
+            response = requests.post(endpoint, headers=headers, json=data, stream=True)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            continue
+
+        print("Assistant: ", end='', flush=True)
+
+        assistant_message = ""
+        for line in response.iter_lines(decode_unicode=True):
+            if line:
+                if line.startswith('data: '):
+                    data_str = line[6:]  # Remove "data: " prefix
+                    if data_str.strip() == "[DONE]":
+                        break
+                    try:
+                        event = json.loads(data_str)
+                        if 'choices' in event:
+                            delta = event['choices'][0]['delta']
+                            if 'content' in delta:
+                                content = delta['content']
+                                print(content, end='', flush=True)
+                                assistant_message += content
+                    except json.JSONDecodeError:
+                        continue
+
+        print()
+
+        messages.append({"role": "assistant", "content": assistant_message})
+
 if __name__ == "__main__":
-    chat()
+    chat_streaming()
