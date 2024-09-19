@@ -4,7 +4,7 @@ class Npc
 {
     public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
     {
-        this.Engine = new LlamaCppCom(endpoint: endpoint);
+        this.Engine = new CompletionsAPIComm(endpoint: endpoint);
         this.Messages.Add(("system", initial_prompt.Trim()));
     }
 
@@ -35,5 +35,5 @@ class Npc
     }
 
     private readonly List<(string role, string content)> Messages = new();
-    private readonly LlamaCppCom Engine;
+    private readonly CompletionsAPIComm Engine;
 }

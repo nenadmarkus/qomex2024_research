@@ -40,7 +40,7 @@ class Program
     static (double, double) Test4()
     {
         var sw = new System.Diagnostics.Stopwatch();
-        var com = new LlamaCppCom();
+        var com = new CompletionsAPIComm();
 
         //
         double t0 = 0.0;

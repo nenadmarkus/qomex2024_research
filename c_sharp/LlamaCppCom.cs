@@ -4,9 +4,9 @@ using System.Text.Json;
 
 namespace LlamaCppCom;
 
-class LlamaCppCom
+class CompletionsAPIComm
 {
-    public LlamaCppCom(string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
+    public CompletionsAPIComm(string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
     {
         this.endpoint = endpoint;
     }
