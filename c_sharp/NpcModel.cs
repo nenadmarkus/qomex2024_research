@@ -5,18 +5,12 @@ class Npc
     public Npc(string name, string initial_prompt, string endpoint = "http://127.0.0.1:8000/v1/chat/completions")
     {
         this.Engine = new LlamaCppCom(endpoint: endpoint);
-        this.Messages.Add(new Dictionary<string, string> {
-            {"role", "system"},
-            {"content", initial_prompt.Trim()}
-        });
+        this.Messages.Add(("system", initial_prompt.Trim()));
     }
 
     public void AddInteraction(string whowhat, string input)
     {
-        this.Messages.Add(new Dictionary<string, string> {
-            {"role", "user"},
-            {"content", input.Trim()}
-        });
+        this.Messages.Add(("user", input.Trim()));
     }
 
     public void GetResponse(Action<string> onResponseChunk)
@@ -32,10 +26,7 @@ class Npc
 
         response = response.Trim();
 
-        this.Messages.Add(new Dictionary<string, string> {
-            {"role", "assistant"},
-            {"content", response.Trim()}
-        });
+        this.Messages.Add(("assistant", response.Trim()));
     }
 
     public string GetTotalInteraction()
@@ -43,6 +34,6 @@ class Npc
         return "... NOT IMPLEMENTED ...";
     }
 
-    private readonly List<Dictionary<string, string>> Messages = new();
+    private readonly List<(string role, string content)> Messages = new();
     private readonly LlamaCppCom Engine;
 }

@@ -13,12 +13,12 @@ class LlamaCppCom
 
     public Action<string>? OnResponseChunk;
 
-    public void Communicate(List<Dictionary<string, string>> messages)
+    public void Communicate(List<(string role, string content)> messages)
     {
         // prepare JSON payload
         var payload = new
         {
-            messages = messages,
+            messages = messages.Select(m => new { role = m.role, content = m.content }),
             stream = true
         };
 
